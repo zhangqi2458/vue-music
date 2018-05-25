@@ -22,10 +22,13 @@
         default: null
       },
     },
-    mounted() {
+    created(){
       setTimeout(() => {
         this._initScroll()
       }, 20)
+    },
+    mounted() {
+
     },
     methods: {
       _initScroll() {

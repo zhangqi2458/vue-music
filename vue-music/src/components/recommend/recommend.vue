@@ -1,12 +1,12 @@
 <template>
   <div class="recommend">
-    <div ref="scroll" class="recommend-content" :data="discList.length">
+    <scroll ref="scroll" class="recommend-content" :data="discList">
       <div>
         <div class="slider-wrapper" v-if="recommends.length">
           <slider>
             <div v-for="item in recommends">
               <a :href="item.linkUrl">
-                <img :src="item.picUrl" alt="">
+                <img class="needsclick" :src="item.picUrl" @load="loadImage" alt="">
               </a>
             </div>
           </slider>
@@ -16,7 +16,7 @@
           <ul>
             <li v-for="item in discList" class="item">
               <div class="icon">
-                <img :src="item.picUrl" alt="" width="60" height="60">
+                <img v-lazy="item.picUrl" alt="" width="60" height="60">
               </div>
               <div class="text">
                 <h2 class="name" v-html="item.songListDesc"></h2>
@@ -26,16 +26,19 @@
           </ul>
         </div>
       </div>
-
-    </div>
+      <div class="loading-container" v-show="!discList.length">
+        <loading></loading>
+      </div>
+    </scroll>
   </div>
 </template>
 
 <script type="text/ecmascript-6">
-  import {getRecommend} from '../../api/recommend.js'
+  import {getRecommend, getDiscList} from '../../api/recommend.js'
   import {ERR_OK} from '../../api/config.js'
   import Slider from '../../base/slider/slider.vue'
   import Scroll from '../../base/scroll/scroll.vue'
+  import Loading from '../../base/loading/loading.vue'
 
   export default {
     data() {
@@ -46,6 +49,7 @@
     },
     created() {
       this._getRecommend()
+      this._getDiscList()
     },
     methods: {
       _getRecommend() {
@@ -53,14 +57,31 @@
           if (res.code === ERR_OK) {
             // console.log(res.data)
             this.recommends = res.data.slider
-            this.discList = res.data.songList
+            // this.discList = res.data.songList
             // console.log(this.discList)
           }
         })
+      },
+      _getDiscList() {
+        getDiscList().then((res) => {
+          if (res.code === ERR_OK) {
+            this.discList = res.data.list
+            console.log(this.discList)
+          }
+        }).catch((err)=>{
+          console.log(err)
+        })
+      },
+      loadImage() {
+        if (this.checkLoaded) {
+          this.$refs.scroll.refresh()
+          this.checkLoaded = true
+        }
+
       }
     },
     components: {
-      Slider,Scroll
+      Slider, Scroll, Loading
     }
   }
 </script>
