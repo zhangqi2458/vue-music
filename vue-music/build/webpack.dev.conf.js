@@ -10,16 +10,18 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const FriendlyErrorsPlugin = require('friendly-errors-webpack-plugin')
 const portfinder = require('portfinder')
 
+const axios = require('axios')
+const express = require('express')
+const app = express()
+const apiRoutes = express.Router()
+app.use('/api', apiRoutes)
 
-var axios = require('axios')
-var app = express()
-var apiRoutes = express.Router()
 apiRoutes.get('/getDiscList', function (req, res) {
   var url = 'https://c.y.qq.com/splcloud/fcgi-bin/fcg_get_diss_by_tag.fcg'
   axios.get(url, {
     headers: {
-      referer: 'https://y.qq.com/',
-      host: 'c.y.qq.com',
+      referer: 'https://c.y.qq.com/',
+      host: 'c.y.qq.com'
     },
     params: req.query
   }).then((response) => {
@@ -28,7 +30,7 @@ apiRoutes.get('/getDiscList', function (req, res) {
     console.log(e)
   })
 })
-app.use('/api',apiRoutes)
+
 
 const HOST = process.env.HOST
 const PORT = process.env.PORT && Number(process.env.PORT)
@@ -62,6 +64,15 @@ const devWebpackConfig = merge(baseWebpackConfig, {
     quiet: true, // necessary for FriendlyErrorsPlugin
     watchOptions: {
       poll: config.dev.poll,
+    },
+    before(app) {
+      app.get('/getDiscList/', (req, res) => {
+        res.json({
+          errno: 0,
+          data: list
+        })//接口返回json数据，上面配置的数据seller就赋值给data请求后调用
+      })
+
     }
   },
   plugins: [

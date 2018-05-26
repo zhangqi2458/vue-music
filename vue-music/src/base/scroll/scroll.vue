@@ -23,12 +23,12 @@
       },
     },
     created(){
+
+    },
+    mounted() {
       setTimeout(() => {
         this._initScroll()
       }, 20)
-    },
-    mounted() {
-
     },
     methods: {
       _initScroll() {

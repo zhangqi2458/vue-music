@@ -19,25 +19,22 @@ export function getRecommend() {
 //抓推荐歌单数据
 export function getDiscList() {
   const url = '/api/getDiscList'
+
   const data = Object.assign({}, commonParams, {
-    picmid:1,
-    rnd: Math.random(),
-    g_tk:5318,
-    loginUin: 0,
-    hostUin: 0,
-    format: 'json',
-    inCharset: 'utf8',
-    notice: 0,
     platform: 'yqq',
-    needNewCode: 0,
-    categoryId: 10000000,
-    sortId: 5,
+    hostUin: 0,
     sin: 0,
     ein: 29,
+    sortId: 5,
+    needNewCode: 0,
+    categoryId: 10000000,
+    rnd: Math.random(),
+    format: 'json'
   })
+
   return axios.get(url, {
     params: data
-  }).then((res)=>{
+  }).then((res) => {
     return Promise.resolve(res.data)
   })
 }

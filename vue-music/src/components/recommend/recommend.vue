@@ -49,7 +49,7 @@
     },
     created() {
       this._getRecommend()
-      this._getDiscList()
+      // this._getDiscList()
     },
     methods: {
       _getRecommend() {
@@ -57,21 +57,21 @@
           if (res.code === ERR_OK) {
             // console.log(res.data)
             this.recommends = res.data.slider
-            // this.discList = res.data.songList
+            this.discList = res.data.songList
             // console.log(this.discList)
           }
         })
       },
-      _getDiscList() {
-        getDiscList().then((res) => {
-          if (res.code === ERR_OK) {
-            this.discList = res.data.list
-            console.log(this.discList)
-          }
-        }).catch((err)=>{
-          console.log(err)
-        })
-      },
+      // _getDiscList() {
+      //   getDiscList().then((res) => {
+      //     if (res.code === ERR_OK) {
+      //       this.discList = res.data.list
+      //       console.log(this.discList)
+      //     }
+      //   }).catch((err)=>{
+      //     console.log(err)
+      //   })
+      // },
       loadImage() {
         if (this.checkLoaded) {
           this.$refs.scroll.refresh()
